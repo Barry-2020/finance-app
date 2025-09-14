@@ -7,14 +7,9 @@ export const AddMov = () => {
     const registrarMov = async () => {
         try {
             await addDoc(collection(db, "movimientos"), {
-                monto: montoMov,
-                tipo: tipoMov, //"egreso" "ingreso"
-                moneda: moneMov,
-                categoria: "comida",
-                descripcion: descMov,
+                ...form, //Copia todo JSON y (agrega o actualiza)
                 fecha: new Date(),
             });
-
             console.log("Movimiento registrado");
             
         } catch (error) {
@@ -22,33 +17,21 @@ export const AddMov = () => {
         }
     }
 
-    const [descMov, setDescMov] = useState('')
-    const [tipoMov, setTipoMov] = useState('')
-    const [montoMov, setMontoMov] = useState('')
-    const [moneMov, setMoneMov] = useState('')
+    const [form, setForm] = useState({
+        desc : '',
+        tipo : '',
+        monto : '',
+        moneda : '',
+    })
 
-    const handleDesc = (e) => {
-        // setDescMov((descMov) => 
-        //     descMov + obj.nativeEvent.data
-        //  );
-        // console.log(descMov);
-        setDescMov(e.target.value)
-        console.log(descMov);
-    }
-
-    const handleTipo = e => {
-        setTipoMov(e.target.value);
-        console.log(tipoMov);
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setForm({
+            ...form, //Copia todo JSON y (agrega o actualiza)
+            [name] : value
+        })
     }
 
-    const handleMonto = e => {
-        setMontoMov(e.target.value);
-        console.log(montoMov);
-    }
-    const handleMone = e => {
-        setMoneMov(e.target.value);
-        console.log(moneMov);
-    }
     const onSearchSubmit = (event) => {
         event.preventDefault();
     }
@@ -70,20 +53,28 @@ export const AddMov = () => {
                                         <input type="radio" name="" id="" placeholder="radio2" className='form-control' />
                                     </div> */}
                                     <div className="mb-3">
-                                        <input type="text" name="" id="" placeholder="Descripción" className='form-control' value={descMov} onChange={ handleDesc } />
+                                        <select className="form-select" aria-label="Categoría" defaultValue="Categoría">
+                                            {/* <option value="0">Categoría</option> */}
+                                            <option value="1">Comida</option>
+                                            <option value="2">Transporte</option>
+                                            <option value="3">General</option>
+                                        </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <input type="text" name="desc" id="" placeholder="Descripción" className='form-control' value={form.desc} onChange={ handleChange } />
                                     </div>
                                     <div className="mb-3">
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <div className="form-control">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name="tipo" id="tipo1" value="ingreso" onChange={ handleTipo }/>
+                                                        <input className="form-check-input" type="radio" name="tipo" id="tipo1" value="ingreso" onChange={ handleChange }/>
                                                         <label className="form-check-label" htmlFor="tipo1">
                                                             ingreso
                                                         </label>
                                                     </div>
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name="tipo" id="tipo2" value="egreso" onChange={ handleTipo }/>
+                                                        <input className="form-check-input" type="radio" name="tipo" id="tipo2" value="egreso" onChange={ handleChange }/>
                                                         <label className="form-check-label" htmlFor="tipo2">
                                                             egreso
                                                         </label>
@@ -93,13 +84,13 @@ export const AddMov = () => {
                                             <div className="col-md-6">
                                                 <div className="form-control">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name="moneda" id="moneda1" value="soles" onChange={ handleMone }/>
+                                                        <input className="form-check-input" type="radio" name="moneda" id="moneda1" value="soles" onChange={ handleChange }/>
                                                         <label className="form-check-label" htmlFor="tipo1">
                                                             S/
                                                         </label>
                                                     </div>
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name="moneda" id="moneda2" value="dolares" onChange={ handleMone }/>
+                                                        <input className="form-check-input" type="radio" name="moneda" id="moneda2" value="dolares" onChange={ handleChange }/>
                                                         <label className="form-check-label" htmlFor="tipo2">
                                                             $
                                                         </label>
@@ -107,16 +98,11 @@ export const AddMov = () => {
                                                 </div>
                                             </div>  
                                         </div>
-                                        
                                         {/* <input type="text" name="" id="" placeholder="Tipo" className='form-control' value={tipoMov} onChange={ handleTipo } /> */}
-                                            
                                     </div>
                                     <div className="mb-3">
-                                        <input type="number" name="" id="" placeholder="Monto" className='form-control' value={montoMov} onChange={ handleMonto } />
+                                        <input type="number" name="monto" id="" placeholder="Monto" className='form-control' value={form.monto} onChange={ handleChange } />
                                     </div>
-                                    {/* <div className="mb-3">
-                                        <input type="radio" name="" id="" placeholder="radio2" className='form-control' />
-                                    </div> */}
                                 </form>
                                 <button className="btn btn-primary" onClick={registrarMov}>Grabar</button>
                             </div>
