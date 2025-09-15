@@ -1,10 +1,31 @@
+import { useState, useEffect } from 'react';
+import { collection, getDocs } from "firebase/firestore"
+import { db } from "../../firebaseConfig"
+
 
 //Con el export y el index queda exportado
 export const MovList = () => {
+    const [movimientos, setMovimientos] = useState([])
+
+    useEffect(() => {
+        const fetchMovimientos = async () => {
+            try{
+                const querySnapshot = await getDocs(collection(db, "movimientos"));
+                const data = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }))
+                setMovimientos(data);
+            } catch(error) {
+                console.log("Error obtenido movimientos: ", error);
+            }
+        };
+        fetchMovimientos();
+    }, [])
+    
     return (
         <>
             <div className="col">
-
                 <h1>Lista de Movimientos</h1>
                 <table className="table table-primary">
                     <thead>
@@ -18,18 +39,23 @@ export const MovList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th scope="row">45423</th>
-                            <td>Comida</td>
-                            <td>Egreso</td>
-                            <td>Soles</td>
-                            <td>29.90</td>
-                            <td>
-                                <button className="btn btn-warning">Editar</button>
-                                <button className="btn btn-danger">Eliminar</button>
-                            </td>
-                        </tr>
-                        <tr>
+                        {
+                            movimientos.map(mov => (
+                                <tr>
+                                    <th scope="row" key={mov.id}>{mov.id}</th>
+                                    <td>{mov.desc}</td>
+                                    <td>{mov.tipo}</td>
+                                    <td>{mov.modeda}</td>
+                                    <td>{mov.monto}</td>
+                                    <td>
+                                        <button className="btn btn-warning">Editar</button>
+                                        <button className="btn btn-danger">Eliminar</button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                        
+                        {/* <tr>
                             <th scope="row">45424</th>
                             <td>Transporte</td>
                             <td>Egreso</td>
@@ -39,7 +65,7 @@ export const MovList = () => {
                                 <button className="btn btn-warning">Editar</button>
                                 <button className="btn btn-danger">Eliminar</button>
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
                 
