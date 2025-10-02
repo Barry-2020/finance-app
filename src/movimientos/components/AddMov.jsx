@@ -5,15 +5,31 @@ import { useState } from 'react';
 export const AddMov = () => {
 
     const registrarMov = async () => {
-        try {
-            await addDoc(collection(db, "movimientos"), {
-                ...form, //Copia todo JSON y (agrega o actualiza)
-                fecha: new Date(),
-            });
-            console.log("Movimiento registrado");
-            
-        } catch (error) {
-            console.log(error);
+
+        //Valida Data
+        console.log('Desde Registrar');
+        
+        console.log(form);
+        // const validaCategoria = () => {
+        //     return
+        // }
+        var datosValidos = 'S'
+        if (form.categoria == '') {
+            console.log('No se cargo categoria');
+            datosValidos = 'N'
+        }
+
+        if (datosValidos == 'S'){
+            try {
+                await addDoc(collection(db, "movimientos"), {
+                    ...form, //Copia todo JSON y (agrega o actualiza)
+                    fecha: new Date(),
+                });
+                console.log("Movimiento registrado");
+                
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
@@ -22,6 +38,7 @@ export const AddMov = () => {
         tipo : '',
         monto : '',
         moneda : '',
+        categoria: '',
     })
 
     const handleChange = (e) => {
@@ -53,11 +70,14 @@ export const AddMov = () => {
                                         <input type="radio" name="" id="" placeholder="radio2" className='form-control' />
                                     </div> */}
                                     <div className="mb-3">
-                                        <select className="form-select" aria-label="Categoría" defaultValue="Categoría">
-                                            {/* <option value="0">Categoría</option> */}
-                                            <option value="1">Comida</option>
-                                            <option value="2">Transporte</option>
-                                            <option value="3">General</option>
+                                        <select className="form-select" aria-label="categoria"
+                                        name='categoria'
+                                        value={form.categoria}
+                                        onChange={ handleChange }>
+                                            <option value="">Categoría</option>
+                                            <option value="Comida">Comida</option>
+                                            <option value="Transporte">Transporte</option>
+                                            <option value="General">General</option>
                                         </select>
                                     </div>
                                     <div className="mb-3">
