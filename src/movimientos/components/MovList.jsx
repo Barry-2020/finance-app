@@ -30,7 +30,7 @@ export const MovList = () => {
                 <table className="table table-primary">
                     <thead>
                         <tr>
-                            <th scope="col">id</th>
+                            <th scope="col" hidden>id</th>
                             <th scope="col">Descripción</th>
                             <th scope="col">Tipo</th>
                             <th scope="col">Moneda</th>
@@ -41,8 +41,8 @@ export const MovList = () => {
                     <tbody>
                         {
                             movimientos.map(mov => (
-                                <tr>
-                                    <th scope="row" key={mov.id}>{mov.id}</th>
+                                <tr key={mov.id}>
+                                    <th scope="row" hidden>{mov.id}</th>
                                     <td>{mov.desc}</td>
                                     <td>{mov.tipo}</td>
                                     <td>{mov.modeda}</td>
