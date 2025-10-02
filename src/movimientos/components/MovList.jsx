@@ -54,18 +54,6 @@ export const MovList = () => {
                                 </tr>
                             ))
                         }
-                        
-                        {/* <tr>
-                            <th scope="row">45424</th>
-                            <td>Transporte</td>
-                            <td>Egreso</td>
-                            <td>Soles</td>
-                            <td>2.90</td>
-                            <td>
-                                <button className="btn btn-warning">Editar</button>
-                                <button className="btn btn-danger">Eliminar</button>
-                            </td>
-                        </tr> */}
                     </tbody>
                 </table>
                 
