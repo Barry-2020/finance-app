@@ -22,9 +22,9 @@ function App() {
                 <div className="col">
                     <h1>Finance-app</h1>
                     <div className="card">
-                    <button onClick={() => setCount((count) => count + 1)}>
-                        count is {count}
-                    </button>
+                        <button onClick={() => setCount((count) => count + 1)}>
+                            count is {count}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -32,9 +32,7 @@ function App() {
             <div className="row">
                 <MovList></MovList>
             </div>
-            <div className="row">
-                <AddMov></AddMov>
-            </div>
+            
         </div>
     </>
   )
