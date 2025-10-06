@@ -2,36 +2,7 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
 // import { signInWithEmailAndPassword } from "firebase/auth"
 import { useState } from 'react';
-export const AddMov = () => {
-
-    const registrarMov = async () => {
-
-        //Valida Data
-        console.log('Desde Registrar');
-        
-        console.log(form);
-        // const validaCategoria = () => {
-        //     return
-        // }
-        var datosValidos = 'S'
-        if (form.categoria == '') {
-            console.log('No se cargo categoria');
-            datosValidos = 'N'
-        }
-
-        if (datosValidos == 'S'){
-            try {
-                await addDoc(collection(db, "movimientos"), {
-                    ...form, //Copia todo JSON y (agrega o actualiza)
-                    fecha: new Date(),
-                });
-                console.log("Movimiento registrado");
-                
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
+export const AddMov = ({ onAddMov }) => {
 
     const [form, setForm] = useState({
         desc : '',
@@ -39,7 +10,7 @@ export const AddMov = () => {
         monto : '',
         moneda : '',
         categoria: '',
-    })
+    });
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -47,6 +18,68 @@ export const AddMov = () => {
             ...form, //Copia todo JSON y (agrega o actualiza)
             [name] : value
         })
+    };
+
+    const [isSaving, setIsSaving] = useState(false);
+
+    const registrarMov = async () => {
+        setIsSaving(true);
+        //Valida Data
+        console.log('Desde Registrar');
+        console.log(form);
+        // const validaCategoria = () => {
+        //     return
+        // }
+        let datosValidos = 'S'
+        if (form.categoria === '') {
+            console.log('No se cargo categoria');
+            datosValidos = 'N'
+        }
+
+        if (datosValidos === 'S'){
+            try {
+                const docRef = await addDoc(collection(db, "movimientos"), {
+                    ...form, //Copia todo JSON y (agrega o actualiza)
+                    fecha: new Date(),
+                });
+                
+                console.log("Movimiento registrado: ", docRef.id);
+                
+                //Crear objeto completo para actualizar la lista
+                const nuevoMovimiento = {
+                    id: docRef.id,
+                    fecha: new Date(),
+                    ...form, 
+                };
+                //Notificar al padre
+                if (onAddMov) { //Verifica que existe la funcion
+                    onAddMov(nuevoMovimiento);
+                }
+
+                // Cerrar modal después del registro exitoso
+                const modalEl = document.getElementById("exampleModal");
+                const modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+
+                // 🔹 Limpia el formulario
+                setForm({
+                    desc: '',
+                    tipo: '',
+                    monto: '',
+                    moneda: '',
+                    categoria: '',
+                });
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+            finally {
+                setIsSaving(false);
+            }
+        }
     }
 
     const onSearchSubmit = (event) => {
@@ -62,7 +95,7 @@ export const AddMov = () => {
                 </button>
             </div>
             {/* <!-- Modal --> */}
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" >
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -128,7 +161,9 @@ export const AddMov = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                            <button className="btn btn-primary" data-bs-dismiss="modal" onClick={registrarMov} >Grabar</button>
+                            <button className="btn btn-primary" onClick={registrarMov} disabled={isSaving}>
+                            { isSaving ? 'Grabando...' : 'Grabar'}
+                            </button>
                         </div>
                     </div>
                 </div>

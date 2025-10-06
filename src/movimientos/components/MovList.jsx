@@ -24,6 +24,11 @@ export const MovList = () => {
         fetchMovimientos();
     }, [])
     
+    // Funcion que recibe el nuevo movieiminto Addmov
+    const handleAddMovimiento = (nuevoMov) => {
+        setMovimientos((prev) => [...prev, nuevoMov]); // agrega el nuevo sin recargar
+    };
+
     return (
         <>
             <div className="col">
@@ -33,7 +38,7 @@ export const MovList = () => {
                     </div>
                 </div>
                 <div className="row">
-                    <AddMov></AddMov>
+                    <AddMov onAddMov={handleAddMovimiento}></AddMov>
                 </div>
                 <div className="row mt-2">
                     <div className="col">
