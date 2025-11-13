@@ -1,6 +1,5 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../firebaseConfig';
-// import { signInWithEmailAndPassword } from "firebase/auth"
 import { useState } from 'react';
 export const AddMov = ({ onAddMov }) => {
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from "firebase/firestore"
-import { AddMov } from "../components/index"
+import { AddMov, EditMov } from "../components/index"
 import { db } from "../../firebaseConfig"
 
 
@@ -65,7 +65,8 @@ export const MovList = () => {
                                             <td>{mov.moneda}</td>
                                             <td>{mov.monto}</td>
                                             <td>
-                                                <button className="btn btn-warning">Editar</button>
+                                                {/* <button className="btn btn-warning">Editar</button> */}
+                                                <EditMov></EditMov>
                                                 <button className="btn btn-danger">Eliminar</button>
                                             </td>
                                         </tr>
